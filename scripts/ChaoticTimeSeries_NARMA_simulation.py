@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import DynamicalSystemGenerator as dsg
-import ReservoirComputing as RC
+from src import dynamics, DelayRC
 
 if __name__=="__main__":
     # 生成NARMA-10数据集用于进行系统baseline测试
@@ -10,10 +9,10 @@ if __name__=="__main__":
     num_test = 2000
     num_step = num_init + num_train + num_test + 1  # 动态系统总长度（+1防止报错）
 
-    time, dynamical_system = dsg.NARMA_10(num_step=num_step)  # 生成动态系统数据
+    time, dynamical_system = dynamics.NARMA_10(num_step=num_step)  # 生成动态系统数据
 
     # 对动态系统初始数据进行分割
-    initialization_set, training_set, testing_set = dsg.Dataset_makeup(time, dynamical_system,
+    initialization_set, training_set, testing_set = dynamics.Dataset_makeup(time, dynamical_system,
                                                                        num_init=num_init,
                                                                        num_train=num_train,
                                                                        num_test=num_test)
@@ -26,7 +25,7 @@ if __name__=="__main__":
     # 调用Delay RC模型
     N = 600  # number of virtual nodes
     # get reservoir activity for trainings data and the initialized model
-    r_train, model = RC.Run_delayRC(x_train,N)
+    r_train, model = DelayRC.Run_delayRC(x_train,N)
     # remove warmup values
     # R_Train = R_Train[warmup_cycles:]
 
@@ -34,7 +33,7 @@ if __name__=="__main__":
     weights = np.dot(np.linalg.pinv(r_train), y_train)
     # print(weights)
 
-    r_test, _ = RC.Run_delayRC(x_test, N, model)
+    r_test, _ = DelayRC.Run_delayRC(x_test, N, model)
 
     # calculate prediction values
     yhat = np.dot(r_test, weights)
