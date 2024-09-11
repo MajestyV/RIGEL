@@ -44,9 +44,7 @@ if __name__=="__main__":
     yhat_consider = yhat[500:]
 
     # calculate normalized root mean squared error
-    NRMSE = np.sqrt(np.divide( \
-        np.mean(np.square(y_consider - yhat_consider)), \
-        np.var(y_consider)))
+    NRMSE = np.sqrt(np.divide(np.mean(np.square(y_consider - yhat_consider)), np.var(y_consider)))
 
     # plot
     plt.figure("Prediction Plot")
