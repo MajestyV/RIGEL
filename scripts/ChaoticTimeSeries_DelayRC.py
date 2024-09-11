@@ -5,11 +5,11 @@ from src import dynamics, DelayRC
 if __name__=="__main__":
     # 生成NARMA-10数据集用于进行系统baseline测试
     num_init = 2000
-    num_train = 4000
-    num_test = 2000
+    num_train = 40000
+    num_test = 40000
     num_step = num_init + num_train + num_test + 1  # 动态系统总长度（+1防止报错）
 
-    time, dynamical_system = dynamics.NARMA_10(num_step=num_step)  # 生成动态系统数据
+    time, dynamical_system = dynamics.Mackey_Glass(num_step=num_step)  # 生成动态系统数据
 
     # 对动态系统初始数据进行分割
     initialization_set, training_set, testing_set = dynamics.Dataset_makeup(time, dynamical_system,
@@ -39,13 +39,11 @@ if __name__=="__main__":
     yhat = np.dot(r_test, weights)
 
     # for calculating the NRMSE, dont use the first 75 values, since the model first needs to get "swinging"
-    y_consider = y_test[500:]
-    yhat_consider = yhat[500:]
+    y_consider = y_test[1000:39000]
+    yhat_consider = yhat[1000:39000]
 
     # calculate normalized root mean squared error
-    NRMSE = np.sqrt(np.divide( \
-        np.mean(np.square(y_consider - yhat_consider)), \
-        np.var(y_consider)))
+    NRMSE = np.sqrt(np.divide(np.mean(np.square(y_consider - yhat_consider)), np.var(y_consider)))
 
     # plot
     plt.figure("Prediction Plot")

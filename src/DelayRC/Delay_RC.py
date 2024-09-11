@@ -176,3 +176,16 @@ def Run_delayRC(data, N, Model = None):
 
     # return reservoir activity matrix
     return X, Model
+
+def SelfIterate_delayRC(data, N, Model):
+    """
+    Apply the same model on new data, but continue with the old model
+    """
+
+    # multiplex
+    J = Model.transform_mp(data)
+    # calculate reservoir activity, measure time
+    X = Model.calculate(J)
+
+    # return reservoir activity matrix
+    return X, Model

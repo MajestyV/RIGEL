@@ -29,14 +29,14 @@ def Mackey_Glass(x0=0.8,parameter=(10,0.2,0.1),tau=23,num_step=5000,step_length=
     dt = step_length                   # 即每个时间步的步长
 
     time = np.zeros(num_step)  # 创建空矩阵以存放时序信号
-    x = np.zeros((1,tau+num_step))     # 创建一个数组记录系统的数据
+    x = np.zeros((1,num_step))     # 创建一个数组记录系统的数据
 
     for i in range(tau):
         time[i] = i  # 记录时序信号
         x[0,i] = x0  # 将系统初始值赋予新的数据数组，需要准确地有tau步，锚定准确的初始条件，这样系统才能有初始动能启动
 
     # range(tau,tau+step) - 从tau到tau+step，不包含tau+step，即：tau, tau+1, tau+2, ..., tau+step-1
-    for i in range(tau,tau+num_step):
+    for i in range(tau,num_step-tau):
         time[i] = i  # 记录时序信号
         dx_dt = -gamma*x[0,i-1]+beta*x[0,i-tau]/(1+x[0,i-tau]**alpha)
         x[0,i] = x[0,i-1]+dx_dt*dt    # x[t] = x[t-1]+(dx/dt)*dt
