@@ -44,6 +44,27 @@ def Mackey_Glass(x0=0.8,parameter=(10,0.2,0.1),tau=23,num_step=5000,step_length=
     return time, x
 
 ########################################################################################################################
+# 2D dynamical systems
+
+# 2D logistic hyperchaotic
+def Logistic_hyperchaotic(origin=(0.5,0.5),a=0.98,num_step=5000):
+    time = np.zeros(num_step)  # 创建空矩阵以存放时序信号
+    trajectory = np.zeros((2, num_step), dtype=float)  # 创建一个数组记录系统的数据
+
+    x, y = (np.zeros(num_step, dtype=float), np.zeros(num_step, dtype=float))  # 创建两个零数组方便后续计算
+    x[0] = origin[0]  # 起点坐标赋值
+    y[0] = origin[1]
+    for i in range(1, num_step):
+        time[i] = i  # 记录时序信号
+        x[i] = np.sin(np.pi*(4*a*x[i-1]*(1-x[i-1]))+(1-a)*np.sin(np.pi*y[i-1]))  # 迭代更新坐标
+        y[i] = np.sin(np.pi*(4*a*y[i-1]*(1-y[i-1]))+(1-a)*np.sin(np.pi*x[i]**2))
+
+    trajectory[0,:] = x
+    trajectory[1,:] = y
+
+    return time, trajectory
+
+########################################################################################################################
 # 3D dynamical systems
 # origin = [x,y,z] specific the starting point of the system, eg. origin = [0.1,0.1,0.1]
 # parameter = [sigma, gamma, beta] ([Prandtl number, Rayleigh number, some number]) specific the parameters of the system

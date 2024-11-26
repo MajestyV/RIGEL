@@ -2,8 +2,9 @@
 # general synchronization property of reservoir computing.
 
 import copy
-import ASHEN  # 直接调用，提高运行效率
 import numpy as np
+from src import dynamics, Activation, ESN, Dataset_makeup  # 直接调用，提高运行效率
+
 # from ..Benchmark_DynamicalSystems import DynamicalSystems
 # from ..OrganizingDataset import Dataset_makeup
 
@@ -23,7 +24,7 @@ class ImageEncryption_HardwareSimulation:
         # 决定是否丢弃初值，防止初始值影响下后续迭代演化出现偏移
         self.transient = kwargs['transient'] if 'transient' in kwargs else 0  # 默认不丢弃初值（此输入应为整型int）
         # Reservoir neuron setting
-        self.activation = kwargs['activation'] if 'activation' in kwargs else ASHEN.Activation.I_Taylor  # 硬件激活函数
+        self.activation = kwargs['activation'] if 'activation' in kwargs else Activation.I_Taylor  # 硬件激活函数
         self.bias = kwargs['bias'] if 'bias' in kwargs else 0  # 阈值（threshold）
         self.leaky_rate = kwargs['leaky_rate'] if 'leaky_rate' in kwargs else 1.0  # 确定是否开启Leaky-integrator模式
         # Reservoir topology
@@ -42,17 +43,17 @@ class ImageEncryption_HardwareSimulation:
     def GenChaoticBit_logistic(self):
         # 导入logistics函数
         x0, r = self.teacher_param  # 解压教师系统的参数
-        time, data = ASHEN.DynamicalSystems.Logistic_map(x0=x0, r=r, num_step=self.teacher_nstep)
+        time, data = dynamics.DynamicalSystems.Logistic_map(x0=x0, r=r, num_step=self.teacher_nstep)
 
         # 分割教师混沌系统的数据集
-        init_set, training_set, predicting_set = ASHEN.Dataset_makeup(time, data,
+        init_set, training_set, predicting_set = Dataset_makeup(time, data,
                                                                       num_init=int(self.teacher_nstep*0.2),
                                                                       num_train=int(self.teacher_nstep*0.35),
                                                                       num_test=int(self.teacher_nstep*0.35))
         t_train, x_train, y_train = training_set
 
         # 定义ESN网络
-        ESN = ASHEN.Analog_ESN(input_dimension=1, output_dimension=1, activation=self.activation,
+        model = ESN.Analog_ESN(input_dimension=1, output_dimension=1, activation=self.activation,
                                input_scaling=self.input_scaling,
                                reservoir_dimension=self.res_dim,
                                reservoir_spectral_radius=self.spec_rad,
@@ -60,8 +61,8 @@ class ImageEncryption_HardwareSimulation:
                                transient=self.transient, bias=self.bias)
 
         # opt_algorithm=4的SelectKBest算法有奇效，太过夸张，慎用！！！主要是岭回归（opt_algorithm=2）效果太好！！！
-        ESN.Training_phase(x_train, y_train,opt_algorithm=self.opt_algorithm)  # 训练阶段
-        y_predict_ESN, u_state_test, r_state_test = ESN.Predicting_phase(8*self.student_nstep)  # 外推预测
+        model.Training_phase(x_train, y_train,opt_algorithm=self.opt_algorithm)  # 训练阶段
+        y_predict_ESN, u_state_test, r_state_test = model.Predicting_phase(8*self.student_nstep)  # 外推预测
 
         # 二进制转八位十进制，展开编写，方便计算，提高运行效率
         bit_flow_decimal = np.zeros((self.student_nstep,1))

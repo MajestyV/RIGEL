@@ -110,7 +110,8 @@ class ImageEncryption:
 
         # print(len(decrypted_image_BytesPadded))
         # print(AES.block_size)
-        decrypted_image_bytes = unpad(decrypted_image_BytesPadded, AES.block_size)  # 去除填充的数据
+        # decrypted_image_bytes = unpad(decrypted_image_BytesPadded, AES.block_size)  # 去除填充的数据
+        decrypted_image_bytes = unpad(decrypted_image_BytesPadded, 32)
 
         # 把字节转化成图像
         image_decrypted = np.frombuffer(decrypted_image_bytes, image_encrypted.dtype).reshape(encrypted_img_row,

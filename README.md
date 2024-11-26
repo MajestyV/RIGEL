@@ -15,6 +15,6 @@ Required packages:
 - *Data acquisition*: [Pandas](https://pandas.pydata.org/)
 - *Scientific calculus*: [Numpy](https://numpy.org/) & [Scipy](https://www.scipy.org/)
 - *Dynamical system analysis*: [NoLiTSA](https://github.com/manu-mannattil/nolitsa)
-- *Visualization*: [Matplotlib](https://matplotlib.org/) & [Seaborn](https://seaborn.pydata.org/)
+- *Visualization*: [OpenCV](https://opencv.org/), [Matplotlib](https://matplotlib.org/) & [Seaborn](https://seaborn.pydata.org/)
 - *Visualizing progress bar*: [Tqdm](https://pypi.org/project/tqdm/)
 - *Data encryption*: [PyCryptodome](https://pypi.org/project/pycryptodome/)

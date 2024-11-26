@@ -1,11 +1,9 @@
 # This code is designed  for realizing echo state network following the work of Yi Zhao' group in HIT, Shenzhen.
 
 import numpy as np
-from .Weight_Generation.WeightMatrix import RandomWeightMatrix, NormalizeMatrixElement  # 随机矩阵生成函数
-from .Weight_Generation.WeightMatrix_Networkx import Network_initial  # 导入通过networkx生成稀疏连接权重的函数
+# 直接调用以提高运行效率
+from src import Network_initial, RandomWeightMatrix, NormalizeMatrixElement, WeightOptimizing
 
-# 利用scikit-learn优化输出权重， 直接调用以提高运行效率
-from .Weight_Optimization.WeightOptimization_sklearn import WeightOptimizing
 
 # reservoir computing
 class Analog_ESN():
