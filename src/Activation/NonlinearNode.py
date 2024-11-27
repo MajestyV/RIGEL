@@ -25,6 +25,21 @@ def I_Taylor(V, coefficient=(0, -0.0606270243, 0.00364103237, 0.140685043, 0.009
     I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
     return I_total
 
+def I_Taylor_w_deviation(V: float or np.ndarray, coefficient: tuple = (0, -0.0606270243, 0.00364103237, 0.140685043,
+                                                                       0.00988703156, -0.00824646444, -0.000618645284,
+                                                                       0.000257831028, 0.000011526794, -0.00000315380367),
+                         deviation: tuple = (-1.49e-3,14.32e-3)):
+
+    deviation_coeff = np.random.normal(loc=deviation[0], scale=deviation[1], size=1)
+
+    degree = len(coefficient)  # 泰勒展开的阶数
+    I_list = []
+    for n in range(degree):
+        I_list.append(coefficient[n] * V ** n)  # 根据阶数，计算每一阶对函数总值的贡献
+    I_mat = np.array(I_list)  # 将列表转换为二维数组，即矩阵
+    I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
+    return I_total*(1.0+deviation_coeff)
+
 
 # 以下是通过指数型背靠背二极管模型（B2BDM）特性拟合的器件激活函数（效果一般）
 # 此函数是为数组型输入而设的非线性器件激活函数

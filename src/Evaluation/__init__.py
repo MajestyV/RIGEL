@@ -9,3 +9,6 @@ from .Regression import Standard_deviation, STD
 from .Regression import Deviation, MSE, RMSE, NRMSE
 # 一些特殊的衡量指标
 from .Regression import NRMSE_ICCAD
+
+# 一些特殊的衡量指标
+# from .LyapunovExponentAnalysis import Quick_LyapunovAnalysis

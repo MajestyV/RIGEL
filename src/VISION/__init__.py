@@ -10,6 +10,9 @@ from .colors.Seaborn_crayons import crayons
 # 画图初始化设置模块
 from .Initialize import GlobalSetting   # 画图初始化设置函数
 
+# 基础画图模块
+from . import Visualization_basic as Visualization_basic
+
 # 动态系统可视化模块
 from .Visual_DynamicalSystems import QuickView_1D  # 一维动态系统
 from .Visual_DynamicalSystems import QuickView_3D_TimeSequence,QuickView_3D_Trajectory  # 三维动态系统

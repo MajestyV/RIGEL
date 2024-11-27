@@ -1,3 +1,6 @@
+# 硬件分析模块
+from . import AnalysisToolkit as AnalysisToolkit                           # 硬件分析工具包
+
 # 动态系统生成模块
 from . import DynamicalSystemGenerator as dynamics
 
