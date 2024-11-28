@@ -1,4 +1,4 @@
-# RIGEL - ReservoIr computinG based Information sEcurity moduLe
+# RIGEL - ReservoIr computinG based information sEcurity moduLe
 
 *<center> 混沌未分天地亂 茫茫渺渺無人見 </center>*
 *<center> 自從盤古破鴻蒙 開闢從茲清濁辨 </center>*
