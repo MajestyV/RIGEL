@@ -14,7 +14,9 @@ Anyway, in theory it should work with any python version >= 2.7.
 Required packages:
 - *Data acquisition*: [Pandas](https://pandas.pydata.org/)
 - *Scientific calculus*: [Numpy](https://numpy.org/) & [Scipy](https://www.scipy.org/)
-- *Dynamical system analysis*: [NoLiTSA](https://github.com/manu-mannattil/nolitsa)
+- *Dynamical system analysis*: [NoLiTSA](https://github.com/manu-mannattil/nolitsa) & [Numba](https://numba.pydata.org/)
+- *Machine learning & Deep learning*: [Scikit-learn](https://scikit-learn.org/stable/) & [PyTorch](https://pytorch.org/)
+- *Weight generation*: [Networkx](https://pypi.org/project/networkx/)
 - *Visualization*: [OpenCV](https://opencv.org/), [Matplotlib](https://matplotlib.org/) & [Seaborn](https://seaborn.pydata.org/)
 - *Visualizing progress bar*: [Tqdm](https://pypi.org/project/tqdm/)
 - *Data encryption*: [PyCryptodome](https://pypi.org/project/pycryptodome/)
