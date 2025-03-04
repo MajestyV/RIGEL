@@ -1,2 +1,4 @@
-from .EchoStateNetwork_Hardware import Analog_ESN as Analog_ESN  # 模拟硬件化的模拟ESN
+# XXX
+from .Analog_EchoStateNetwork import Analog_ESN as Analog_ESN  # ESN
+from .Analog_LeakyIntegrator_EchoStateNetwork import Analog_LiESN as Analog_LiESN  # Li-ESN
 

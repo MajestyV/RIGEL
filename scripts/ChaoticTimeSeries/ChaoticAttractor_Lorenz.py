@@ -1,5 +1,6 @@
 import numpy as np
 from src import dynamics, Activation, ESN, VISION, Dataset_makeup
+import matplotlib.pyplot as plt
 
 if __name__=='__main__':
     ####################################################################################################################
@@ -9,10 +10,12 @@ if __name__=='__main__':
     time, data = dynamics.LorenzSystem(origin=(3,2,16),parameter=(10,28,8.0/3.0),
                                                num_step=num_step,step_length=step_length)
 
+    print(data.shape)
+
     num_init = 2000  # 前面的点可能包含初始点的信息，会是我们的拟合偏移，因此我们从一定点数之后开始取值
     num_train = 3000  # 训练集长度
     num_test = 3000  # 预测集长度
-    initialization_set, training_set, testing_set = Dataset_makeup(time, data,
+    initialization_set, training_set, testing_set = Dataset_makeup(time, data.T,
                                                                       num_init=num_init, num_train=num_train,
                                                                       num_test=num_test)
 
@@ -20,17 +23,19 @@ if __name__=='__main__':
     t_train, x_train, y_train = training_set
     t_test, x_test, y_test = testing_set
 
+    print(x_train.shape, y_train.shape)
+
     # print(data)
     # an.QuickView.Plot2D(y_test,mode='scatter')  # 快速可视化分析
 
     ####################################################################################################################
     # 定义ESN网络
     # 先定义一些常用的网络参数
-    input_scaling = 0.01  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
+    input_scaling = 0.001  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
     # 水库权重矩阵的参数
-    reservoir_dim = 200  # N是水库矩库的边长，同时也就是水库态向量的长度
-    spectral_radius = 0.4
-    reservoir_density = 0.1
+    reservoir_dim = 400  # N是水库矩库的边长，同时也就是水库态向量的长度
+    spectral_radius = 0.8
+    reservoir_density = 0.2
     # 器件的性能的多项式拟合系数
     # device_coefficient = [0, -0.0606270243, 0.00364103237, 0.140685043, 0.00988703156, -0.00824646444,
     # -0.000618645284, 0.000257831028, 0.000011526794, -0.00000315380367]
@@ -39,8 +44,8 @@ if __name__=='__main__':
 
     model = ESN.Analog_ESN(input_dimension=3,output_dimension=3,
                         input_scaling=input_scaling,
-                        activation=Activation.I_Taylor,
-                        # activation=Activation.I_Taylor_w_deviation,
+                        # activation=Activation.I_Taylor,  # Ideal device charateristics
+                        activation=Activation.I_Taylor_w_deviation,  # Considering device variation
                         reservoir_dimension=reservoir_dim,
                         reservoir_density=reservoir_density,
                         reservoir_spectral_radius=spectral_radius,
@@ -51,13 +56,18 @@ if __name__=='__main__':
     # opt_algorithm=4的SelectKBest算法有奇效，太过夸张，慎用！！！主要是岭回归（opt_algorithm=2）效果太好！！！
     y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=0)
     # 此模型可以利用transient参数先把前面一段储层的初始态去掉
-    t_train_new = np.array([i + num_init + transient for i in range(y_train.shape[1])])
+    t_train_new = np.array([[i + num_init + transient for i in range(y_train.shape[1])]]).T
 
     y_test_ESN, u_state_test, r_state_test = model.Predicting_phase(num_test)
 
+    print(t_train_new.shape, t_test.shape)
+    print(y_test.shape, y_test_ESN.shape)
+
     # 网络拟合结果分析
-    VISION.Analyze_3D_systems(np.hstack((t_train_new, t_test)), (y_train, y_train_ESN), (y_test, y_test_ESN),
+    VISION.Analyze_3D_systems(np.vstack((t_train_new, t_test)), (y_train, y_train_ESN), (y_test, y_test_ESN),
                                  deviation_range=(0, 100))
+
+    plt.show(block=True)
 
     # Lyapunov谱分析
     # Evaluation.Quick_LyapunovAnalysis(y_test,y_test_ESN,mean_period=10,num_step=2000,step_length=step_length,

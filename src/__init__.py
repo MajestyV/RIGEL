@@ -7,7 +7,7 @@ from . import DynamicalSystemGenerator as dynamics
 # 数据集整理生成模块
 # Dataset_makeup()函数可以将时序信号整理为Reservoir computing所需的数据集
 from .OrganizingDataset import Dataset_makeup, Dataset_Makeup4ERA
-from .OrganizingDataset import Gen_NARMA                                    # 此函数可以快速生成NARMA数据集
+from .OrganizingDataset import Gen_NARMA                                   # 此函数可以快速生成NARMA数据集
 
 # 权重生成模块
 from .Weight_Generation import RandomWeightMatrix, NormalizeMatrixElement  # 随机矩阵生成函数
