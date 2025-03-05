@@ -11,13 +11,18 @@ def QuickView_1D():
 def QuickView_3D_TimeSequence(time,dynamical_system):
     return
 
-# 画三维
-def QuickView_3D_Trajectory(dynamical_system,color=crayons['Navy Blue']):
-    x,y,z = dynamical_system
-    plt.plot(x, y, z, color=color, projection='3d')  # 绘制三维图图像
-    plt.grid(False)                                  # 隐藏背景网格线
-    plt.tight_layout()                               # 防止画图时，图像分布失衡，部分文字显示被遮挡的情况
-    plt.show(block=True)                             # 显示图片（用console运行代码时，只有加这一句代码才能plot图）
+def QuickView_3D_Trajectory(trajectory, color=crayons['Navy Blue'], show_grid=False):
+    '''
+    画三维动态系统轨迹图
+    '''
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="3d")  # 设置画布为三维图图像
+    ax.plot(trajectory[0, :], trajectory[1, :], trajectory[2, :], color=color)  # 画图
+    ax.set_xlabel("$x$")  # 更改坐标轴标签
+    ax.set_ylabel("$y$")
+    ax.set_zlabel("$z$")
+    ax.grid(show_grid)  # 隐藏背景网格线
+    plt.tight_layout()  # 防止画图时，图像分布失衡，部分文字显示被遮挡的情况
     return
 
 def QuickView_Spatiotemporal(dynamical_system,figsize=(8,2),levels=np.arange(-3.5, 3.5, 0.2),**kwargs):

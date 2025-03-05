@@ -158,18 +158,33 @@ def Rearrange(data: np.ndarray) -> np.ndarray:
 
     return data_rearranged
 
-def Add_noise(data: np.ndarray, noise_type: str='normal', **kwargs) -> np.ndarray:
+def Add_noise(data: np.ndarray, SNR: float, noise_type: str='normal', **kwargs) -> np.ndarray:
     '''
     这个函数可以给动态系统轨迹数据添加噪声
     :param data: dynamical system trajectory
     :return: dynamical system trajectory with noise
     '''
+    num_channel, len_traj = data.shape  # 获取动态系统轨迹数据的形状
 
+    # 生成一个与数据大小相同的随机噪声基序列
+    noise_dist_param = kwargs['noise_dist_param'] if 'noise_dist_param' in kwargs else (0, 0.1)  # 噪声分布参数
+    if noise_type == 'normal':
+        drift, width = noise_dist_param  # 获取噪声的均值和标准差
+        noise_basic = np.random.normal(loc=drift, scale=width, size=(num_channel, len_traj))
+    elif noise_type == 'uniform':
+        inf, sup = noise_dist_param  # 获取下确界和上确界
+        noise_basic = np.random.uniform(low=inf, high=sup, size=(num_channel, len_traj))
+    else:
+        raise ValueError('The noise type is not supported!')
 
-    noise = np.random.normal(loc=0, scale=0.01, size=data.shape)  # 生成一个与数据大小相同的随机噪声
-    data_noisy = data + noise  # 将噪声添加到数据中
+    for i in range(num_channel):
+        A_signal_avg = np.abs(data[i]).mean()        # 计算信号幅值的平均值
+        amp_coeff = A_signal_avg/10**(SNR/20.)       # 计算噪声的幅值调节系数
+        noise_basic[i] = noise_basic[i] * amp_coeff  # 根据指定信噪比调整噪声的幅值
 
-    return data_noisy
+    data_w_noise = data + noise_basic  # 将噪声添加到数据中
+
+    return data_w_noise
 
 if __name__ == '__main__':
     # Testing
