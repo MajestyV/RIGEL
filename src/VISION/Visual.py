@@ -119,14 +119,9 @@ def Analyze_3D_systems(time, training_set, testing_set, wspace=1, hspace=0.8, mo
     output_test, output_test_network = testing_set  # 测试集
     sep_line_pos = t[output_test.shape[1]]  # 训练集与测试集分割线位置
 
-    print(1)
-
     # 画时序图所需数据
     ground_truth = np.hstack((output_train, output_test))
     network_output = np.hstack((output_train_network, output_test_network))
-
-    print(ground_truth.shape, network_output.shape)
-
     x_truth, y_truth, z_truth = ground_truth
     x_network, y_network, z_network = network_output
 

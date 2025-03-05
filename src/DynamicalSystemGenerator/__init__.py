@@ -1,5 +1,10 @@
-# 动态系统生成函数模块
-from .DynamicalSystems import Logistic_map, Mackey_Glass, Logistic_hyperchaotic, LorenzSystem
+# 动态系统生成函数
+from .DynamicalSystems import Logistic_map, Mackey_Glass, Logistic_hyperchaotic
+
+# 3D 动态系统
+from .DynamicalSystems import RosslerAttractor, Lorenz_63
+
+
 from .NARMA import NARMA_10, NARMA_20  # NARMA任务，RNN的baseline
 # 动态系统数据集重排模块
 from .DynamicalSystems import Rearrange

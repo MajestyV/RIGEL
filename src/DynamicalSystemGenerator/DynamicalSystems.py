@@ -69,66 +69,86 @@ def Logistic_hyperchaotic(origin=(0.5,0.5),a=0.98,num_step=5000):
 # origin = [x,y,z] specific the starting point of the system, eg. origin = [0.1,0.1,0.1]
 # parameter = [sigma, gamma, beta] ([Prandtl number, Rayleigh number, some number]) specific the parameters of the system
 
-def RosslerAttractor(origin,parameter,step,step_length=0.001):
-    Rossler = np.zeros([step+1,3])  # 创建一个（step+1）行，3列的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
-    trajectory = origin  # 对轨迹的初始点赋值
-    for n in range(step):
-        pass
-    return
+def RosslerAttractor(origin=(0.1,0,0),parameter=(0.1,0.1,14),num_step=5000,step_length=0.01):
+    x, y, z = origin  # 解压参数
+    a, b, c = parameter
+    input = [x, y, z, a, b, c, step_length]
+    x, y, z, a, b, c, dt = [float(n) for n in input]  # 将所有输入变量转换成浮点数，以防出错
 
-# Lorenz attractor, when gamma < 1, the attractor is the origin; when 1 <= gamma < 13.927, there two stable points
-def LorenzSystem(origin=(3.051522, 1.582542, 15.62388),parameter=(10.0, 29, 2.667),num_step=5000,step_length=0.01):
+    time = np.zeros(num_step, dtype=int)  # 创建空矩阵以存放时序信号
+    trajectory = np.zeros((3, num_step), dtype=float)  # 创建一个（step+1）行，3列的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
+    trajectory[:, 0] = np.array(origin)  # 因为走step步，所以会有（step+1）个点
+
+    for i in range(1, num_step):
+        time[i] = i  # 记录信号时序
+
+        x, y, z = trajectory[:, i - 1]  # 更新V1,V2,I的值
+
+        dr_dt = np.array([-y-z, x+a*y, b+z*(x-c)])  # 计算轨迹变化导数：dr/dt = (dx/dt, dy/dt, dz/dt)
+        # 更新x,y,z的值，得到下一个点的坐标, r[n+1] = r[n]+(dr/dt)*dt
+        trajectory[:, i] = trajectory[:, i - 1] + dr_dt * dt
+
+    return time, trajectory
+
+# Lorenz-63 attractor, when gamma < 1, the attractor is the origin; when 1 <= gamma < 13.927, there two stable points
+def Lorenz_63(origin=(3.05, 1.58, 15.62),parameter=(10.0, 29, 2.667),num_step=5000,step_length=0.01):
     x, y, z = origin                                       # 解压参数
     sigma, gamma, beta = parameter
     input = [x,y,z,sigma,gamma,beta,step_length]
     x,y,z,sigma,gamma,beta,dt = [float(n) for n in input]  # 将所有输入变量转换成浮点数，以防出错
 
-    time = np.zeros((num_step+1,1))    # 创建空矩阵以存放时序信号
-    time[0,0] = 0                      # 插入第一个起点时序信号，记为0
-    Lorenz = np.zeros((num_step+1,3))  # 创建一个（step+1）行，3列的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
-    Lorenz[0] = np.array(origin)       # 因为走step步，所以会有（step+1）个点
+    time = np.zeros(num_step, dtype=int)    # 创建空矩阵以存放时序信号
+    trajectory = np.zeros((3,num_step),dtype=float)  # 创建一个（step+1）行，3列的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
+    trajectory[:,0] = np.array(origin)       # 因为走step步，所以会有（step+1）个点
 
-    for n in range(num_step):
-        time[n+1,0] = n  # 记录信号时序
+    for i in range(1,num_step):
+        time[i] = i  # 记录信号时序
+
+        x, y, z = trajectory[:,i-1]  # 更新V1,V2,I的值
+
         dr_dt = np.array([sigma*(y-x), x*(gamma-z)-y, x*y-beta*z])  # 计算轨迹变化导数：dr/dt = (dx/dt, dy/dt, dz/dt)
         # 更新x,y,z的值，得到下一个点的坐标, r[n+1] = r[n]+(dr/dt)*dt
-        x = x + dr_dt[0]*dt
-        y = y + dr_dt[1]*dt
-        z = z + dr_dt[2]*dt
-        Lorenz[n+1] = np.array([x,y,z])  # 将下一个点的坐标更新到数据矩阵中
+        trajectory[:, i] = trajectory[:, i - 1] + dr_dt * dt
 
-    return time, Lorenz
+    return time, trajectory
 
 # 蔡氏电路 （Chua's circuit）
 # origin = [V1,V2,I] specific the starting point of the system
 # In this case, V1, V2 indicate the voltage applied to the capacitor C1 and C2 in the Chua's circuit, and I is the current flow through the inductor
 # parameter = [alpha, beta, c, d], where alpha, beta is decided by the circuit components, alpha = C2/C1, beta = C2*R**2/L
 # c and d is the parameter of the nonlinear resistor, we could assume c = Gb*R, d = Ga*R, where Ga and Gb is the slope of different section of the nonlinear resistor
-def ChuaCircuit(origin,parameter,step,step_length=0.001):
+def ChuaCircuit(origin=(0.1,0.1,0.1),parameter=(10,12.33,-0.544,-1.088),num_step=100000,step_length=0.001):
     V1, V2, I = origin                # 解压参数
     alpha, beta, c, d = parameter
     input = [V1, V2, I, alpha, beta, c, d, step_length]
     V1, V2, I, alpha, beta, c, d, dt = [float(n) for n in input]  # 将所有输入变量转换成浮点数，以防出错
 
-    Chua = np.zeros([step + 1, 3])  # 创建一个（step+1）行，3列的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
-    Chua[0] = np.array(origin)  # 因为走step步，所以会有（step+1）个点
+    time = np.zeros(num_step, dtype=int) # 创建空矩阵以存放时序信号
+    trajectory = np.zeros((3,num_step), dtype=float)  # 创建一个(3×num_step)的零矩阵，每一行都是当前step的轨迹坐标，从origin开始
+    trajectory[:,0] = np.array(origin)  # 因为走step步，所以会有（step+1）个点
 
-    for n in range(step):
+    for i in range(1,num_step):
+        time[i] = i  # 记录信号时序
+
+        V1, V2, I = trajectory[:,i-1]  # 更新V1,V2,I的值
+
         # 函數f描述了非線性電阻（即蔡氏二极管）的電子響應，並且它的形狀是依賴於它的元件的特定阻態
-        f = c*V1+0.5*(d-c)*(np.abs(V1+1)-np.abs(V1-1))
+        f = c * V1 + 0.5 * (d - c) * (np.abs(V1 + 1) - np.abs(V1 - 1))
 
         dr_dt = np.array([alpha*(V2-V1-f), V1-V2+I, -beta*V2])   # 计算轨迹变化导数：dr/dt = (dV1/dt, dV2/dt, dI/dt)
+
+        trajectory[:,i] = trajectory[:,i-1]+dr_dt*dt
         # 更新V1,V2,I的值，得到下一个点的坐标, r[n+1] = r[n]+(dr/dt)*dt
-        V1 = V1 + dr_dt[0] * dt
-        V2 = V2 + dr_dt[1] * dt
-        I = I + dr_dt[2] * dt
 
-        Chua[n+1] = np.array([V1,V2,I])
+    return time, trajectory
 
-    return Chua
-
-# 这个函数可以重整以上函数的输出，方便数据分析
-def Rearrange(data):
+##################################################### 辅助函数库 #########################################################
+def Rearrange(data: np.ndarray) -> np.ndarray:
+    '''
+    这个函数可以重整以上函数的输出，方便数据分析
+    :param data: dynamical system trajectory
+    :return: rearranged dynamical system trajectory
+    '''
     num_time_step = len(data)    # 数据的长度即为时间步的个数
     num_variable = len(data[0])  # 自变量的个数
     data_rearranged = np.zeros([num_variable+1,num_time_step])  # 创建一个行为（自变量数+1），列为时间步数的零矩阵
@@ -138,9 +158,18 @@ def Rearrange(data):
 
     return data_rearranged
 
-# Calculating the spectrum of Lyapunov exponents (李亚普诺夫指数谱)
-#def LyapunovExponentSpectrum(self):
-    #return
+def Add_noise(data: np.ndarray, noise_type: str='normal', **kwargs) -> np.ndarray:
+    '''
+    这个函数可以给动态系统轨迹数据添加噪声
+    :param data: dynamical system trajectory
+    :return: dynamical system trajectory with noise
+    '''
+
+
+    noise = np.random.normal(loc=0, scale=0.01, size=data.shape)  # 生成一个与数据大小相同的随机噪声
+    data_noisy = data + noise  # 将噪声添加到数据中
+
+    return data_noisy
 
 if __name__ == '__main__':
     # Testing

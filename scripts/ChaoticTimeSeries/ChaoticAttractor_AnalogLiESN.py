@@ -32,6 +32,7 @@ if __name__=='__main__':
     # 定义ESN网络
     # 先定义一些常用的网络参数
     input_scaling = 0.01  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
+    leaking_rate = 0.9
     # 水库权重矩阵的参数
     reservoir_dim = 400  # N是水库矩库的边长，同时也就是水库态向量的长度
     spectral_radius = 1.2
@@ -42,16 +43,17 @@ if __name__=='__main__':
     # reference_factor = 0.65
     transient = 0
 
-    model = ESN.Analog_ESN(input_dimension=3,output_dimension=3,
-                           input_scaling=input_scaling,
-                           # activation=Activation.I_Taylor,  # Ideal device charateristics
-                           activation=Activation.I_Taylor_w_deviation,  # Considering device variation
-                           reservoir_dimension=reservoir_dim,
-                           reservoir_density=reservoir_density,
-                           reservoir_spectral_radius=spectral_radius,
-                           # reservoir_connection_weight=W_res,
-                           transient=transient,
-                           bias=0)
+    model = ESN.Analog_LiESN(input_dimension=3,output_dimension=3,
+                             input_scaling=input_scaling,
+                             activation=Activation.I_Taylor,  # Ideal device charateristics
+                             # activation=Activation.I_Taylor_w_deviation,  # Considering device variation
+                             leaking_rate=leaking_rate,
+                             reservoir_dimension=reservoir_dim,
+                             reservoir_density=reservoir_density,
+                             reservoir_spectral_radius=spectral_radius,
+                             # reservoir_connection_weight=W_res,
+                             transient=transient,
+                             bias=0)
 
     # opt_algorithm=4的SelectKBest算法有奇效，太过夸张，慎用！！！主要是岭回归（opt_algorithm=2）效果太好！！！
     y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=0)

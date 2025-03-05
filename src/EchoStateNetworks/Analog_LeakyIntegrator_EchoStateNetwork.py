@@ -4,10 +4,15 @@ import numpy as np
 # 直接调用以提高运行效率
 from src import Network_initial, RandomWeightMatrix, NormalizeMatrixElement, WeightOptimizing
 
+from typing import Callable  # 引入函数类型提示
 
-# reservoir computing
-class Analog_LiESN():
-    def __init__(self, input_dimension=3, output_dimension=3, activation=np.tanh, input_scaling=0.1, bias=0,
+class Analog_LiESN:
+    '''
+    This code is designed to constructing Analog Leaky-integrator Echo State Network (Analog Li-ESN) for physical
+    reservoir computing simulation.
+    '''
+
+    def __init__(self, input_dimension=3, output_dimension=3, activation: Callable=np.tanh, leaking_rate: float=1.0, input_scaling=0.1, bias=0,
                  network_mode='ER', reservoir_dimension=400, reservoir_spectral_radius=1.0, reservoir_density=0.10,
                  transient=1000, random_seed=2048, memory_capacity_config=None, **kwargs):
 
@@ -16,6 +21,7 @@ class Analog_LiESN():
         self.N = input_dimension              # dimension of the input
         self.M = output_dimension             # dimension of the output
         self.func = activation                # activation function
+        self.a = leaking_rate                 # leaking rate of the reservoir
         self.s_in = input_scaling             # the scaling parameter of the input-to-reservoir connection weight matrix
         self.K = reservoir_dimension          # dimension of the reservoir
         self.rho = reservoir_spectral_radius  # spectral radius of the reservoir
@@ -43,10 +49,10 @@ class Analog_LiESN():
             W_res_init = (Network_initial(network_mode, Depth=0, random_seed=random_seed,
                                           network_size=reservoir_dimension, density=reservoir_density,
                                           MC_configure=memory_capacity_config)).T
-            W_res_init = np.triu(np.multiply(W_res_init,Network_weight))+np.triu(np.multiply(W_res_init,Network_weight)).T
+
             self.W_res = W_res_init / np.max(np.abs(np.linalg.eigvals(W_res_init)))  # 对储层权重矩阵进行谱半径归一化
 
-    def Training_phase(self, input_train=None, output_train=None, opt_algorithm=0):
+    def Training_phase(self, input_train: np.ndarray, output_train: np.ndarray, opt_algorithm: int=0) -> tuple:
         L = input_train.shape[1]  # 训练集长度
         U_state = np.zeros((self.K, L))  # 存放训练阶段所有未激活的储层输入的矩阵
         R_state = np.zeros((self.K, L))  # 存放训练阶段所有储层态的矩阵
@@ -54,17 +60,19 @@ class Analog_LiESN():
         # 更新初始储层态
         u = np.dot(self.rho * self.W_res, R_state[:,0]) + self.s_in * np.dot(self.W_in, input_train[:,0]) + self.b
         U_state[:,0] = u
-        R_state[:,0] = self.func(u)
+        R_state[:,0] = (1.0-self.a)*R_state[:,0]+self.func(u)
         for i in range(1, L):
             u = np.dot(self.rho * self.W_res, R_state[:,i-1]) + self.s_in * np.dot(self.W_in, input_train[:,i]) + self.b
             U_state[:,i] = u
-            R_state[:,i] = self.func(u)
+            R_state[:,i] = (1.0-self.a)*R_state[:,i-1] + self.func(u)
 
-        W_out = WeightOptimizing(output_train[:, self.transient:].T, R_state[:, self.transient:].T,
+        V_state = np.vstack((R_state, input_train))  # 对于Li-ESN，输出层的输入是储层的输出以及输入的拼接，这样可以保证长期迭代的稳定性
+
+        W_out = WeightOptimizing(output_train[:, self.transient:].T, V_state[:, self.transient:].T,
                                  index=opt_algorithm, k=0.8)
         W_out = W_out.T  # 要转置才符合这套代码的规范
 
-        ESN_output_train = np.dot(W_out, R_state)
+        ESN_output_train = np.dot(W_out, V_state)
 
         self.W_out = W_out
         self.laststate = R_state[:, -1]
@@ -73,20 +81,22 @@ class Analog_LiESN():
         return (ESN_output_train[:,self.transient:], output_train[:, self.transient:], U_state[:, self.transient:],
                 R_state[:, self.transient:], W_out)
 
-    def Predicting_phase(self, Q):
+    def Predicting_phase(self, Q: int) -> tuple:
         outputs = np.zeros((self.N,Q))
         U_state = np.zeros((self.K,Q))  # 存放测试阶段所有未激活的储层输入的矩阵
         R_state = np.zeros((self.K,Q))  # 存放测试阶段所有储层态的矩阵
 
         u = np.dot(self.rho * self.W_res, self.laststate) + self.s_in * np.dot(self.W_in, self.lastinput) + self.b
         U_state[:,0] = u
-        R_state[:,0] = self.func(u)
-        outputs[:,0] = np.dot(self.W_out,R_state[:,0])
+        R_state[:,0] = (1.0-self.a)*self.laststate+self.func(u)
+        v_state = np.concatenate((R_state[:, 0], self.lastinput))
+        outputs[:,0] = np.dot(self.W_out,v_state)
         for i in range(1, Q):
             u = np.dot(self.rho * self.W_res, R_state[:,i-1]) + self.s_in * np.dot(self.W_in, outputs[:,i-1]) + self.b
             U_state[:,i] = u
-            R_state[:,i] = self.func(u)
-            outputs[:,i] = np.dot(self.W_out,R_state[:,i])
+            R_state[:,i] = (1.0-self.a)*R_state[:,i-1]+self.func(u)
+            v_state = np.concatenate((R_state[:, i], outputs[:, i - 1]))
+            outputs[:,i] = np.dot(self.W_out,v_state)
 
         return outputs, U_state, R_state
 
