@@ -7,4 +7,4 @@ from .Standard import Linear, ReLU, dReLU  # 线性以及有限非线性激活�
 from .Standard import Tanh, Tanh_flipped, Sigmoid, Sigmoid_flipped  # 挤压型激活函数
 
 # 硬件激活函数
-from .NonlinearNode import I_Taylor, I_Taylor_w_deviation
+from .NonlinearNode import I_Taylor, I_Taylor_w_OperationalRange, I_Taylor_w_Deviation

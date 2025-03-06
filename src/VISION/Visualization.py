@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 from .colors import crayons  # 导入色彩值字典
-from src import dynamics, Evaluation
+from src import Dynamics, Evaluation
 
 # 全局画图设置：一些用于文章级结果图的matplotlib参数，可以作为matplotlib的全局变量载入
 def GlobalSetting(**kwargs):

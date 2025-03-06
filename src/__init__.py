@@ -1,10 +1,9 @@
 # 硬件分析模块
 from . import AnalysisToolkit as AnalysisToolkit                           # 硬件分析工具包
 
-# 动态系统生成模块
-from . import DynamicalSystemGenerator as dynamics
+# 数据集生成及整理模块
+from . import DynamicalSystemGenerator as Dynamics                         # 动态系统数据集模块
 
-# 数据集整理生成模块
 # Dataset_makeup()函数可以将时序信号整理为Reservoir computing所需的数据集
 from .OrganizingDataset import Dataset_makeup, Dataset_Makeup4ERA
 from .OrganizingDataset import Gen_NARMA                                   # 此函数可以快速生成NARMA数据集

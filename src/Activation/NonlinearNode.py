@@ -25,7 +25,33 @@ def I_Taylor(V, coefficient=(0, -0.0606270243, 0.00364103237, 0.140685043, 0.009
     I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
     return I_total
 
-def I_Taylor_w_deviation(V: float or np.ndarray, coefficient: tuple = (0, -0.0606270243, 0.00364103237, 0.140685043,
+def I_Taylor_w_OperationalRange(V: float or np.ndarray, operational_range: tuple = (-5.0, 5.0),
+                                coefficient: tuple=(0, -0.0606270243, 0.00364103237, 0.140685043, 0.00988703156, -0.00824646444,
+                                                    -0.000618645284, 0.000257831028, 0.000011526794, -0.00000315380367),
+                                **kwargs)-> float or np.ndarray:
+    '''
+    通过Taylor级数拟合的非线性器件输出特性，考虑了器件的工作范围
+    :param V: 输入电压V，需要是浮点数或者是一维数组
+    :param coefficient:
+    :return:
+    '''
+
+    # 电压钳位
+    if 'clipping_voltage' in kwargs:
+        V_min, V_max = kwargs['clipping_voltage']
+    else:
+        V_min, V_max = operational_range
+    V_clipped = np.clip(V, a_min=V_min, a_max=V_max)  # 利用np.clip()函数对输入电压进行钳位
+
+    degree = len(coefficient)  # 泰勒展开的阶数
+    I_list = []
+    for n in range(degree):
+        I_list.append(coefficient[n] * V_clipped ** n)  # 根据阶数，计算每一阶对函数总值的贡献
+    I_mat = np.array(I_list)  # 将列表转换为二维数组，即矩阵
+    I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
+    return I_total
+
+def I_Taylor_w_Deviation(V: float or np.ndarray, coefficient: tuple = (0, -0.0606270243, 0.00364103237, 0.140685043,
                                                                        0.00988703156, -0.00824646444, -0.000618645284,
                                                                        0.000257831028, 0.000011526794, -0.00000315380367),
                          deviation: tuple = (-1.49e-3,14.32e-3)):

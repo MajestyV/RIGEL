@@ -3,7 +3,7 @@
 
 import copy
 import numpy as np
-from src import dynamics, Activation, ESN, Dataset_makeup  # 直接调用，提高运行效率
+from src import Dynamics, Activation, ESN, Dataset_makeup  # 直接调用，提高运行效率
 
 # from ..Benchmark_DynamicalSystems import DynamicalSystems
 # from ..OrganizingDataset import Dataset_makeup
