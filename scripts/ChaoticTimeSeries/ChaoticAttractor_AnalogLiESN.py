@@ -10,8 +10,7 @@ if __name__=='__main__':
     time, data = Dynamics.Lorenz_63(origin=(3,2,16),parameter=(10,28,8.0/3.0),
                                                num_step=num_step,step_length=step_length)
 
-    # 加入噪声
-    data = Dynamics.Add_noise(data, SNR=20.)
+    data = Dynamics.Add_noise(data, SNR=20.)  # 加入噪声
 
     num_init = 2000  # 前面的点可能包含初始点的信息，会是我们的拟合偏移，因此我们从一定点数之后开始取值
     num_train = 4000  # 训练集长度
