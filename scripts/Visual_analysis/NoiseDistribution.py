@@ -37,10 +37,10 @@ if __name__ == '__main__':
                           'Rayleigh': ['Rayleigh', 0.1]}
 
     seq_length = 10000
-    noise_type, noise_dist_param = noise_setting_dict['Poisson']
+    noise_type, noise_dist_param = noise_setting_dict['uniform']
     amp_avg = 10.
 
-    num_bins = 30
+    num_bins = 100
 
     noise, noise_adj = Gen_noise_seq(noise_type=noise_type, noise_dist_param=noise_dist_param, amp_avg=amp_avg, seq_length=seq_length)
 
