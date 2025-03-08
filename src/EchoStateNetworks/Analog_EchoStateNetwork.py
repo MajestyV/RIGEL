@@ -6,7 +6,7 @@ from src import Network_initial, RandomWeightMatrix, NormalizeMatrixElement, Wei
 
 
 # reservoir computing
-class Analog_ESN():
+class Analog_ESN:
     def __init__(self, input_dimension=3, output_dimension=3, activation=np.tanh, input_scaling=0.1, bias=0,
                  network_mode='ER', reservoir_dimension=400, reservoir_spectral_radius=1.0, reservoir_density=0.10,
                  transient=1000, random_seed=2048, memory_capacity_config=None, **kwargs):

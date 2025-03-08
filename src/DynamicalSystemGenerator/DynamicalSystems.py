@@ -158,7 +158,7 @@ def Rearrange(data: np.ndarray) -> np.ndarray:
 
     return data_rearranged
 
-def Add_noise(data: np.ndarray, noise_type: str='normal', SNR: float=20., **kwargs) -> np.ndarray:
+def Add_noise(data: np.ndarray, noise_type: str='normal', noise_dist_param: float or tuple=None, SNR: float=20.) -> np.ndarray:
     '''
     这个函数可以给动态系统轨迹数据添加噪声
     :param data: dynamical system trajectory
@@ -167,13 +167,21 @@ def Add_noise(data: np.ndarray, noise_type: str='normal', SNR: float=20., **kwar
     num_channel, len_traj = data.shape  # 获取动态系统轨迹数据的形状
 
     # 生成一个与数据大小相同的随机噪声基序列
-    noise_dist_param = kwargs['noise_dist_param'] if 'noise_dist_param' in kwargs else (0, 0.1)  # 噪声分布参数
-    if noise_type == 'normal':
+    if noise_type == 'normal':           # 高斯噪声 (正态分布)
         drift, width = noise_dist_param  # 获取噪声的均值和标准差
         noise_basic = np.random.normal(loc=drift, scale=width, size=(num_channel, len_traj))
-    elif noise_type == 'uniform':
-        inf, sup = noise_dist_param  # 获取下确界和上确界
+
+    elif noise_type == 'uniform':        # 均匀噪声 (区间内均匀分布，可以是偏态或者非偏态)
+        inf, sup = noise_dist_param      # 获取下确界和上确界
         noise_basic = np.random.uniform(low=inf, high=sup, size=(num_channel, len_traj))
+
+    elif noise_type == 'Poisson':        # 泊松噪声 (偏态分布, 模拟散粒噪声) [https://numpy.org/doc/2.1/reference/random/generated/numpy.random.poisson.html]
+        lam = noise_dist_param           # 获取泊松噪声的均值参数
+        noise_basic = np.random.poisson(lam=lam, size=(num_channel, len_traj))
+
+    elif noise_type == 'Rayleigh':       # 瑞利噪声 (偏态分布) [https://numpy.org/doc/2.1/reference/random/generated/numpy.random.rayleigh.html]
+        scale = noise_dist_param         # 获取瑞利噪声的尺度参数
+        noise_basic = np.random.rayleigh(scale=scale, size=(num_channel, len_traj))
     else:
         raise ValueError('The noise type is not supported!')
 
