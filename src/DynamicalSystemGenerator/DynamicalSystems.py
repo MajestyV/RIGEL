@@ -158,7 +158,7 @@ def Rearrange(data: np.ndarray) -> np.ndarray:
 
     return data_rearranged
 
-def Add_noise(data: np.ndarray, SNR: float=20., noise_type: str='normal', **kwargs) -> np.ndarray:
+def Add_noise(data: np.ndarray, noise_type: str='normal', SNR: float=20., **kwargs) -> np.ndarray:
     '''
     这个函数可以给动态系统轨迹数据添加噪声
     :param data: dynamical system trajectory

@@ -12,3 +12,6 @@ from .Regression import NRMSE_ICCAD
 
 # 一些特殊的衡量指标
 # from .LyapunovExponentAnalysis import Quick_LyapunovAnalysis
+
+# 衡量轨迹相似性的指标
+from .TrajectorySimilarity import Hausdorff_distance

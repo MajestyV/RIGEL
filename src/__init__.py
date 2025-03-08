@@ -26,6 +26,7 @@ from . import EchoStateNetworks as ESN
 
 # 模型评估模块
 from .Evaluation import Regression                                         # 用于评估回归任务表现的函数包
+from .Evaluation import TrajectorySimilarity                               # 用于评估轨迹相似性的函数包
 
 # 数据可视化及保存模块
 from . import VISION as VISION
