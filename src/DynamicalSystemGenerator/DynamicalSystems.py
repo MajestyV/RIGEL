@@ -143,28 +143,28 @@ def ChuaCircuit(origin=(0.1,0.1,0.1),parameter=(10,12.33,-0.544,-1.088),num_step
     return time, trajectory
 
 ##################################################### 辅助函数库 #########################################################
-def Rearrange(data: np.ndarray) -> np.ndarray:
+def Rearrange(trajectory: np.ndarray) -> np.ndarray:
     '''
     这个函数可以重整以上函数的输出，方便数据分析
-    :param data: dynamical system trajectory
+    :param trajectory: dynamical system trajectory
     :return: rearranged dynamical system trajectory
     '''
-    num_time_step = len(data)    # 数据的长度即为时间步的个数
-    num_variable = len(data[0])  # 自变量的个数
-    data_rearranged = np.zeros([num_variable+1,num_time_step])  # 创建一个行为（自变量数+1），列为时间步数的零矩阵
-    data_rearranged[0] = np.linspace(0,num_time_step-1,num_time_step)  # 重整后的数据的第一行即为时间步
-    for i in range(num_variable):
-        data_rearranged[i+1] = data[:,i]  # 从第二列开始，每一列都是某一个自变量在不同时间步下的值
+    num_step, num_channel = trajectory.shape  # 获取数据维度以及动态系统维度
 
-    return data_rearranged
+    traj_rearranged = np.zeros([num_channel+1,num_step])  # 创建一个行为（自变量数+1），列为时间步数的零矩阵
+    traj_rearranged[0] = np.linspace(0,num_step-1,num_step)  # 重整后的数据的第一行即为时间步
+    for i in range(num_channel):
+        traj_rearranged[i+1] = trajectory[:,i]  # 从第二列开始，每一列都是某一个自变量在不同时间步下的值
 
-def Add_noise(data: np.ndarray, noise_type: str='normal', noise_dist_param: float or tuple=None, SNR: float=20.) -> np.ndarray:
+    return traj_rearranged
+
+def Add_noise(trajectory: np.ndarray, noise_type: str='normal', noise_dist_param: float or tuple=None, SNR: float=20.) -> np.ndarray:
     '''
     这个函数可以给动态系统轨迹数据添加噪声
     :param data: dynamical system trajectory
     :return: dynamical system trajectory with noise
     '''
-    num_channel, len_traj = data.shape  # 获取动态系统轨迹数据的形状
+    num_channel, len_traj = trajectory.shape  # 获取动态系统轨迹数据的形状
 
     # 生成一个与数据大小相同的随机噪声基序列
     if noise_type == 'normal':           # 高斯噪声 (正态分布)
@@ -186,13 +186,13 @@ def Add_noise(data: np.ndarray, noise_type: str='normal', noise_dist_param: floa
         raise ValueError('The noise type is not supported!')
 
     for i in range(num_channel):
-        A_signal_avg = np.abs(data[i]).mean()        # 计算信号幅值的平均值
+        A_signal_avg = np.abs(trajectory[i]).mean()        # 计算信号幅值的平均值
         amp_coeff = A_signal_avg/10**(SNR/20.)       # 计算噪声的幅值调节系数
         noise_basic[i] = noise_basic[i] * amp_coeff  # 根据指定信噪比调整噪声的幅值
 
-    data_w_noise = data + noise_basic  # 将噪声添加到数据中
+    traj_w_noise = trajectory + noise_basic  # 将噪声添加到数据中
 
-    return data_w_noise
+    return traj_w_noise
 
 if __name__ == '__main__':
     # Testing
