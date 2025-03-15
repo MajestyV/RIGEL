@@ -185,12 +185,14 @@ def Add_noise(trajectory: np.ndarray, noise_type: str='normal', noise_dist_param
     else:
         raise ValueError('The noise type is not supported!')
 
+    noise = np.zeros((num_channel, len_traj))                      # 创建一个与数据大小相同的零矩阵
     for i in range(num_channel):
-        A_signal_avg = np.abs(trajectory[i]).mean()        # 计算信号幅值的平均值
-        amp_coeff = A_signal_avg/10**(SNR/20.)       # 计算噪声的幅值调节系数
-        noise_basic[i] = noise_basic[i] * amp_coeff  # 根据指定信噪比调整噪声的幅值
+        A_signal_avg = np.abs(trajectory[i]).mean()                # 计算信号幅值的平均值
+        A_noise_avg = np.abs(noise_basic[i]).mean()                # 计算噪声幅值的平均值
+        amp_coeff = A_signal_avg/(10**(SNR/20.))                   # 根据指定信噪比计算噪声的幅值调节系数
+        noise[i] = noise_basic[i]*amp_coeff/(A_noise_avg+0.00001)  # 调整噪声的幅值 (加上一个很小的数值，避免除零错误)
 
-    traj_w_noise = trajectory + noise_basic  # 将噪声添加到数据中
+    traj_w_noise = trajectory + noise                              # 将噪声添加到数据中
 
     return traj_w_noise
 
