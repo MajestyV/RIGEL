@@ -36,8 +36,9 @@ if __name__ == '__main__':
                           'Poisson': ['Poisson', 10],
                           'Rayleigh': ['Rayleigh', 0.1]}
 
-    seq_length = 10000
-    noise_type, noise_dist_param = noise_setting_dict['uniform']
+    noise_type = 'Rayleigh'
+    seq_length = 100000
+    noise_type, noise_dist_param = noise_setting_dict[noise_type]
     amp_avg = 10.
 
     num_bins = 100
@@ -49,5 +50,9 @@ if __name__ == '__main__':
 
     ax[0].hist(noise, bins=num_bins, color='b', label='Basic noise')
     ax[1].hist(noise_adj, bins=num_bins, color='r', label='Adjusted noise')
+
+    saving_dir = 'E:/PhD_research/NonlinearNode/Simulation/RIGEL/Noise_perturbation/NoiseAnalysis/Summary/demo'
+    for fmt in ['eps', 'png', 'pdf']:
+        plt.savefig(f'{saving_dir}/NoiseDistribution_{noise_type}.{fmt}', format=fmt)
 
     plt.show(block=True)
