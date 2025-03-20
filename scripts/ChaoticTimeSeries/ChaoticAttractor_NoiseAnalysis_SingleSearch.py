@@ -4,9 +4,10 @@ from src import Dynamics, Activation, ESN, VISION, Dataset_makeup, Evaluation
 
 from tqdm import tqdm  # 进度条展示
 
-working_loc = 'Lingjiang'
+working_loc = 'iSense'
 
-saving_dir_dict = {'Lingjiang': 'E:/PhD_research/NonlinearNode/Simulation/RIGEL/Working_dir'}
+saving_dir_dict = {'Lingjiang': 'E:/PhD_research/NonlinearNode/Simulation/RIGEL/Working_dir',
+                   'iSense': 'F:/DZTT滴磕盐资料/磕盐项目/NonlinearNode/Simulation/RIGEL/Noise_perturbation/SingleSearch'}
 
 def Gen_Lorenz63_w_Noise_Dataset(origin: tuple=(3, 2, 16), parameter: tuple=(10, 28, 8.0 / 3.0), num_step: int=10001,
                                  step_length: float=0.01, num_init: int=2000, num_train: int=4000, num_test: int=3000,
@@ -67,11 +68,14 @@ def Reconstructing_by_AnalogESN(dataset: tuple[tuple,tuple,tuple], ESN_type: str
 if __name__=='__main__':
     print('Start noise analysis process...')
 
-    noise_type, noise_dist_param, SNR, npoints_eval = ('uniform', (-0.5,0.5), 60, 1000)  # 设置噪声测试的参数
+    # 设置噪声的类型、参数、信噪比、评估点数
+    # noise_type, noise_dist_param, SNR, npoints_eval = ('uniform', (-0.5,0.5), 20, 1000)  # 均匀分布噪声
+    noise_type, noise_dist_param, SNR, npoints_eval = ('Rayleigh', 0.1, 20, 1000)  # 均匀分布噪声
+    # noise_type, noise_dist_param, SNR, npoints_eval = ('Poisson', 10, 20, 1000)  # 均匀分布噪声
 
     # 设置ESN模型的参数
-    ESN_type = 'Analog-LiESN'  # 设置ESN的类型
-    activation_type = 'FSJ-clipped'  # 设置激活函数的类型
+    ESN_type = 'Analog-ESN'  # 设置ESN的类型
+    activation_type = 'FSJ'  # 设置激活函数的类型
 
     # Parameter pipeline
     if ESN_type == 'Analog-ESN' and activation_type == 'FSJ':
