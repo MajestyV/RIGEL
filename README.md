@@ -7,7 +7,7 @@
 
 RIGEL is a python package designed for simulating and analyzing reservoir computing hardware systems, particularly focusing on chaotic systems. It provides tools for data acquisition, scientific calculus, dynamical system analysis, machine learning, deep learning, and visualization. 
 
-The reservoir computing paradigm adopted in RIGEL is mainly based on Echo State Networks (ESNs) [1][2], a foundational model in reservoir computing. Reservoir computing itself can be regarded as a concise and randomized version of recurrent neural networks (RNNs), perserving the form of discrete-time dynamical systems mathematically. As such, it is particularly well-suited for tasks involving time series prediction, especially in chaotic systems where traditional methods may struggle. 
+The reservoir computing paradigm adopted in RIGEL is mainly based on Echo State Networks (ESNs) [^1][^2], a foundational model in reservoir computing. Reservoir computing itself can be regarded as a concise and randomized version of recurrent neural networks (RNNs), perserving the form of discrete-time dynamical systems mathematically. As such, it is particularly well-suited for tasks involving time series prediction, especially in chaotic systems where traditional methods may struggle. 
 
 Beyond the core functionalities, RIGEL also includes modules for exploring the real-world applications of the simulated reservoir computing hardware systems, such as information security and more.
 
@@ -71,5 +71,6 @@ If you find our work helpful, please refer to the following publication: [Analys
 ```
 
 ## References
-[1] [H. Jaeger. The "echo state" approach to analysing andtraining recurrent neural network, *GMD report* (2001)](https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf)
-[2] [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* 304:5667, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
+[^1] [H. Jaeger. The "echo state" approach to analysing andtraining recurrent neural network, *GMD report* (2001)](https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf)
+
+[^2] [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* 304:5667, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
