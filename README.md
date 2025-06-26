@@ -71,6 +71,6 @@ If you find our work helpful, please refer to the following publication: [Analys
 ```
 
 ## References
-[^1] [H. Jaeger. The "echo state" approach to analysing andtraining recurrent neural network, *GMD report* (2001)](https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf)
+[^1]: [H. Jaeger. The "echo state" approach to analysing andtraining recurrent neural network, *GMD report* (2001)](https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf)
 
-[^2] [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* 304:5667, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
+[^2]: [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* 304:5667, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
