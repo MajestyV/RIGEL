@@ -1,10 +1,17 @@
+# 导入环境
+import os, sys
+current_path = os.path.abspath(os.path.dirname(__file__))  # 获取文件目录
+project_path = current_path[:current_path.find('RIGEL') + len('RIGEL')]  # 获取项目根路径，内容为当前项目的名字，即RIGEL
+sys.path.append(project_path)  # 将项目根路径添加到系统路径中，以便导入项目中的模块
+
 import numpy as np
 from src import Dynamics, Activation, ESN, VISION, Dataset_makeup
 import matplotlib.pyplot as plt
 
 working_loc = 'Lingjiang'
 
-saving_dir_dict = {'Lingjiang': 'E:/PhD_research/NonlinearNode/Simulation/RIGEL/Clipped_FSJ_ActFunc'}
+saving_dir_dict = {'Lingjiang': 'E:/PhD_research/NonlinearNode/Simulation/RIGEL/Clipped_FSJ_ActFunc',
+                   'CentraHorizon': 'D:/Projects/NonlinearNode/Working_dir'}
 
 if __name__=='__main__':
     ####################################################################################################################
@@ -14,7 +21,7 @@ if __name__=='__main__':
     time, data = Dynamics.Lorenz_63(origin=(3,2,16),parameter=(10,28,8.0/3.0),
                                                num_step=num_step,step_length=step_length)
 
-    data = Dynamics.Add_noise(data, SNR=200.)  # 加入噪声
+    # data = Dynamics.Add_noise(data, SNR=200.)  # 加入噪声
 
     num_init = 2000  # 前面的点可能包含初始点的信息，会是我们的拟合偏移，因此我们从一定点数之后开始取值
     num_train = 4000  # 训练集长度
@@ -52,7 +59,8 @@ if __name__=='__main__':
                            input_scaling=input_scaling,
                            # activation=Activation.I_Taylor,  # Ideal device charateristics
                            # activation=Activation.I_Taylor_w_Deviation,  # Considering device variation
-                           activation=act_func,
+                           # activation=act_func,
+                           activation=np.tanh,  # NOTE: 测试用激活函数
                            reservoir_dimension=reservoir_dim,
                            reservoir_density=reservoir_density,
                            reservoir_spectral_radius=spectral_radius,
