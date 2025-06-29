@@ -134,3 +134,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# NOTE: Skipping the results directory as it may contain large files or outputs
+# results/

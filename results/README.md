@@ -1,0 +1,1 @@
+# The result directory is used to placed model output and other stuffs
