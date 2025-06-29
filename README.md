@@ -1,4 +1,4 @@
-# RIGEL - ReservoIr computinG based information sEcurity moduLe
+# RIGEL - ReservoIr computinG based information sEcurity moduLe [![DOI](https://zenodo.org/badge/845505515.svg)](https://doi.org/10.5281/zenodo.15765839)
 
 *<center> 混沌未分天地亂 茫茫渺渺無人見 </center>*
 *<center> 自從盤古破鴻蒙 開闢從茲清濁辨 </center>*
@@ -57,7 +57,17 @@ pip install -r requirements.txt
 ```
 (***Reminding***: *When setting up virtual environments by anaconda, using `conda install` before `pip install` is usually beneficial for environment management.*)
 
-## III. Citation
+## III. Development
+
+For potential developer, feel free to clone this repository to your local computer and make improvements. If you are interested in this project, you can directly contact our group [Electronic Materials and Device @ CUHK](https://www.ee.cuhk.edu.hk/~ghhu/). We have a more powerful version on our organization github repository. The following is some use instructions for using [Git](https://git-scm.com/) to perform project development management.
+
+Before starting, **always create your own branch from `main`**.
+
+### i. For project maintainers
+
+### ii. For developers
+
+## IV. Citation
 
 If you find our work helpful, please refer to the following publication: [Analysis on reservoir activation with the nonlinearity harnessed from solution-processed molybdenum disulfide](https://arxiv.org/abs/2403.17676), *arXiv* (2024)
 
@@ -73,4 +83,4 @@ If you find our work helpful, please refer to the following publication: [Analys
 ## References
 [^1]: [H. Jaeger. The "echo state" approach to analysing andtraining recurrent neural network, *GMD report* (2001)](https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf)
 
-[^2]: [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* 304:5667, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
+[^2]: [H. Jaeger, H. Haas. Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, *Science* **304(5667)**, 78-80 (2004).](https://www.science.org/doi/10.1126/science.1091277)
