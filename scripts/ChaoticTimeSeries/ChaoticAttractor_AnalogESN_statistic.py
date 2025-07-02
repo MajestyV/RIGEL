@@ -1,13 +1,13 @@
-# 导入环境
+# NOTE: 导入环境
 import os, sys
 current_path = os.path.abspath(os.path.dirname(__file__))  # 获取文件目录
 project_path = current_path[:current_path.find('RIGEL') + len('RIGEL')]  # 获取项目根路径，内容为当前项目的名字，即RIGEL
 sys.path.append(project_path)  # 将项目根路径添加到系统路径中，以便导入项目中的模块
 
-# result_dir = f'{project_path}/results/Analog-ESN_statistic_result'  # 用于存放结果的目录
 result_dir = f'{project_path}/results/Analog-ESN_comparison_with_TimeVaryingActivation'  # 用于存放结果的目录
+config_dir = f'{project_path}/configs'  # 配置文件目录
 
-# 导入所需的库和模块
+# NOTE: 导入所需的库和模块
 import numpy as np
 import pandas as pd  # 导入pandas库用于数据处理
 import seaborn as sns  # 导入seaborn库用于绘图
@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt  # 导入matplotlib库用于绘图
 from sklearn.metrics import mean_squared_error, r2_score  # 导入均方误差和R²评分
 from tqdm import tqdm  # 进度条库
 from src import Dynamics, Activation, ESN, VISION, Dataset_makeup
+from src.utils import Get_ESN_hyperparam  # 导入获取ESN超参数的函数
 
 def define_target():
     num_step = 10001  # 总步数
@@ -36,7 +37,7 @@ def define_target():
 
 def act_func(x): return Activation.I_Taylor_w_Deviation(x)  # 激活函数，考虑了器件的非理想特性，并且加入了随机偏差
 
-def main():
+def main(run_mode: str):
     ''' 主循环函数 '''
     num_init = 2000  # 前面的点可能包含初始点的信息，会是我们的拟合偏移，因此我们从一定点数之后开始取值
     num_train = 4000  # 训练集长度
@@ -48,13 +49,16 @@ def main():
     t_train, x_train, y_train = training_set
     t_test, x_test, y_test = testing_set
 
+    
+    hyperparam_dict = Get_ESN_hyperparam(run_mode)  # 获取ESN超参数
+
     # NOTE: 定义一些常用的网络参数
-    input_scaling = 0.005  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
-    leaking_rate = 0.95
+    input_scaling = hyperparam_dict['input_scaling']  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
+    leaking_rate = hyperparam_dict['leaking_rate']
     # NOTE: 水库权重矩阵的参数
-    reservoir_dim = 400  # N是水库矩库的边长，同时也就是水库态向量的长度
-    spectral_radius = 1.0
-    reservoir_den = 0.05
+    reservoir_dim = hyperparam_dict['reservoir_dim']  # N是水库矩库的边长，同时也就是水库态向量的长度
+    spectral_radius = hyperparam_dict['spectral_radius']
+    reservoir_den = hyperparam_dict['reservoir_den']
 
     transient = 1000
 
@@ -68,7 +72,7 @@ def main():
                              transient=transient, bias=0)
 
     # opt_algorithm=4的SelectKBest算法有奇效，太过夸张，慎用！！！主要是岭回归（opt_algorithm=2）效果太好！！！
-    y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=0)
+    y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=hyperparam_dict['opt_algorithm'])
     # 此模型可以利用transient参数先把前面一段储层的初始态去掉
     t_train_new = np.array([i + num_init + transient for i in range(y_train.shape[1])])
 
@@ -84,11 +88,14 @@ def main():
 if __name__ == '__main__':
     '''多次运行模型，输出结果，并画统计分布图 '''
 
+    run_mode = 'AnalogLiESN_DeviceIV_TimeVaryingDeviation'  # 运行模式
+    num_cycles = 100  # 运行次数
+
+    # -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     print('Running statistical analysis of the ESN model for ...')
     if not os.path.exists(result_dir):  # 如果结果保存目录不存在，则创建它
         os.makedirs(result_dir)  # 创建目录
-
-    num_cycles = 100  # 运行次数
     
     keys = ['run_index', 'MSE_500', 'R2_500', 'MSE_1000', 'R2_1000', 'MSE_1500', 'R2_1500', 'MSE_2000', 'R2_2000', 'MSE_2500', 'R2_2500', 'MSE_3000', 'R2_3000']
     values = [[] for _ in range(len(keys))]  # 初始化统计结果字典的值为一个空列表，长度与keys相同 (不能直接 [[]]*len(keys) 因为这样会导致所有列表指向同一个对象)
@@ -96,7 +103,7 @@ if __name__ == '__main__':
 
     # results = []  # 用于存储每次运行的结果
     for i in tqdm(range(num_cycles), desc='Running ESN model'):
-        metrics = main()  # 调用主函数获取指标
+        metrics = main(run_mode=run_mode)  # 调用主函数获取指标
 
         # 将指标添加到统计结果字典中
         statistic_result['run_index'].append(i + 1)  # 记录运行索引
@@ -105,22 +112,5 @@ if __name__ == '__main__':
 
     statistic_result_DF = pd.DataFrame(statistic_result)  # 将统计结果转换为DataFrame
     statistic_result_DF.to_csv(f'{result_dir}/AnalogESN_w_TimeVaryingActivation_{num_cycles}.csv', index=False)  # 保存统计结果到CSV文件
-
-    # sns.displot([result['MSE_1000'] for result in results], kde=True, label='MSE_1000')'
-
-    # for key in statistic_result.keys():
-        # print(f'{key}: {np.mean(statistic_result[key]):.4f} ± {np.std(statistic_result[key]):.4f}')
-
-        # result_subdir = f'{result_dir}/{key}'  # 创建一个子目录用于存放每个指标的结果
-        # if not os.path.exists(result_subdir):  # 如果子目录不存在，则创建它
-            # os.makedirs(result_subdir)
-        
-        # 将每个指标的结果保存到对应的子目录中
-        # for fmt in ['eps', 'png', 'pdf']:
-
-
-    # sns.displot(statistic_result['R2_1000'], kde=True, label='R2_1000')
-
-    # plt.savefig(f'{result_dir}/Untitled.png')
 
     print('Statistical analysis completed and results saved to CSV file.')

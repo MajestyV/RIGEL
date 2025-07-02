@@ -1,0 +1,24 @@
+{
+    "AnalogLiESN_DeviceIV": {
+        "run_mode": "AnalogLiESN_DeviceIV",
+        "target": "Lorenz_63",
+        "input_scaling": 0.01,
+        "spectral_radius": 1.2,
+        "reservoir_dim": 400,
+        "reservoir_den": 0.1,
+        "leaking_rate": 0.95,
+        "transient": 1000,
+        "opt_algorithm": 2
+    },
+    "AnalogLiESN_DeviceIV_TimeVaryingDeviation": {
+        "run_mode": "AnalogLiESN_DeviceIV_TimeVaryingDeviation",
+        "target": "Lorenz_63",
+        "input_scaling": 0.01,
+        "spectral_radius": 0.8,
+        "reservoir_dim": 400,
+        "reservoir_den": 0.1,
+        "leaking_rate": 0.95,
+        "transient": 1000,
+        "opt_algorithm": 1
+    }
+}

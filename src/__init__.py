@@ -1,3 +1,5 @@
+from . import utils                                                        # 工具函数包
+
 # 硬件分析模块
 from . import AnalysisToolkit as AnalysisToolkit                           # 硬件分析工具包
 

@@ -42,10 +42,10 @@ if __name__=='__main__':
     ####################################################################################################################
     # 定义ESN网络
     # 先定义一些常用的网络参数
-    input_scaling = 0.02  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
+    input_scaling = 0.01  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
     # 水库权重矩阵的参数
     reservoir_dim = 400  # N是水库矩库的边长，同时也就是水库态向量的长度
-    spectral_radius = 0.3
+    spectral_radius = 0.8
     reservoir_density = 0.1
     leaking_rate = 0.95
     # 器件的性能的多项式拟合系数
@@ -54,6 +54,7 @@ if __name__=='__main__':
     # reference_factor = 0.65
     transient = 1000
 
+    # def act_func(x): return Activation.I_Taylor(x)
     # def act_func(x): return Activation.I_Taylor_w_OperationalRange(x, operational_range=(-3, 3))
     def act_func(x): return Activation.I_Taylor_w_Deviation(x)  # 激活函数，考虑了器件的非理想特性，并且加入了随机偏差
 
@@ -72,7 +73,7 @@ if __name__=='__main__':
                            bias=0)
 
     # opt_algorithm=4的SelectKBest算法有奇效，太过夸张，慎用！！！主要是岭回归（opt_algorithm=2）效果太好！！！
-    y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=2)
+    y_train_ESN, y_train, u_state_train, r_state_train, W_out = model.Training_phase(x_train, y_train, opt_algorithm=1)
     # 此模型可以利用transient参数先把前面一段储层的初始态去掉
     t_train_new = np.array([i + num_init + transient for i in range(y_train.shape[1])])
 
