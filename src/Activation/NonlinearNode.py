@@ -1,6 +1,7 @@
 # 以下是通过多项式回归（polynomial regression）拟合的器件激活函数
 
 import numpy as np
+from typing import Union  # 用于类型注解，表示可以是float或一维数组
 
 # 多项式回归拟合的器件性能（Device performance fitted by polynomial regression），系数列表应从零阶开始，由低到高排列
 # 自变量x可以是浮点数或者是一维数组，多项式回归的系数列表需要是一维数组
@@ -25,10 +26,10 @@ def I_Taylor(V, coefficient=(0, -0.0606270243, 0.00364103237, 0.140685043, 0.009
     I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
     return I_total
 
-def I_Taylor_w_OperationalRange(V: float or np.ndarray, operational_range: tuple = (-5.0, 5.0),
+def I_Taylor_w_OperationalRange(V: Union[float,np.ndarray], operational_range: tuple = (-5.0, 5.0),
                                 coefficient: tuple=(0, -0.0606270243, 0.00364103237, 0.140685043, 0.00988703156, -0.00824646444,
                                                     -0.000618645284, 0.000257831028, 0.000011526794, -0.00000315380367),
-                                **kwargs)-> float or np.ndarray:
+                                **kwargs)-> Union[float,np.ndarray]:
     '''
     通过Taylor级数拟合的非线性器件输出特性，考虑了器件的工作范围
     :param V: 输入电压V，需要是浮点数或者是一维数组
@@ -51,10 +52,10 @@ def I_Taylor_w_OperationalRange(V: float or np.ndarray, operational_range: tuple
     I_total = I_mat.sum(axis=0)  # 进行每列的内部求和，即按列将整个矩阵求和成一行矩阵，结果为一维数组
     return I_total
 
-def I_Taylor_w_Deviation(V: float or np.ndarray, coefficient: tuple = (0, -0.0606270243, 0.00364103237, 0.140685043,
+def I_Taylor_w_Deviation(V: Union[float,np.ndarray], coefficient: tuple = (0, -0.0606270243, 0.00364103237, 0.140685043,
                                                                        0.00988703156, -0.00824646444, -0.000618645284,
                                                                        0.000257831028, 0.000011526794, -0.00000315380367),
-                         deviation: tuple = (-1.49e-3,14.32e-3)):
+                         deviation: tuple = (-1.49e-3,14.32e-3)) -> Union[float,np.ndarray]:
 
     deviation_coeff = np.random.normal(loc=deviation[0], scale=deviation[1], size=1)
 

@@ -42,25 +42,28 @@ if __name__=='__main__':
     ####################################################################################################################
     # 定义ESN网络
     # 先定义一些常用的网络参数
-    input_scaling = 0.01  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
+    input_scaling = 0.02  # 如果计算结果出现nan，则可以考虑先降低输入的缩放因子，因为我们的激活函数是无界函数，很容易超出计算机所能处理的量程
     # 水库权重矩阵的参数
     reservoir_dim = 400  # N是水库矩库的边长，同时也就是水库态向量的长度
-    spectral_radius = 1.5
+    spectral_radius = 0.3
     reservoir_density = 0.1
+    leaking_rate = 0.95
     # 器件的性能的多项式拟合系数
     # device_coefficient = [0, -0.0606270243, 0.00364103237, 0.140685043, 0.00988703156, -0.00824646444,
     # -0.000618645284, 0.000257831028, 0.000011526794, -0.00000315380367]
     # reference_factor = 0.65
     transient = 1000
 
-    def act_func(x): return Activation.I_Taylor_w_OperationalRange(x, operational_range=(-3, 3))
+    # def act_func(x): return Activation.I_Taylor_w_OperationalRange(x, operational_range=(-3, 3))
+    def act_func(x): return Activation.I_Taylor_w_Deviation(x)  # 激活函数，考虑了器件的非理想特性，并且加入了随机偏差
 
     model = ESN.Analog_ESN(input_dimension=3,output_dimension=3,
                            input_scaling=input_scaling,
                            # activation=Activation.I_Taylor,  # Ideal device charateristics
                            # activation=Activation.I_Taylor_w_Deviation,  # Considering device variation
-                           # activation=act_func,
-                           activation=np.tanh,  # NOTE: 测试用激活函数
+                           activation=act_func,
+                           # activation=np.tanh,  # NOTE: 测试用激活函数
+                           leaking_rate=leaking_rate,
                            reservoir_dimension=reservoir_dim,
                            reservoir_density=reservoir_density,
                            reservoir_spectral_radius=spectral_radius,
@@ -80,8 +83,8 @@ if __name__=='__main__':
                                  deviation_range=(0, 100))
 
     # 保存数据
-    for fmt in ['eps', 'png', 'pdf']:
-        plt.savefig(f'{saving_dir_dict[working_loc]}/AnalogESN_Clipped_Lorenz63.{fmt}', format=fmt)
+    # for fmt in ['eps', 'png', 'pdf']:
+        # plt.savefig(f'{saving_dir_dict[working_loc]}/AnalogESN_Clipped_Lorenz63.{fmt}', format=fmt)
 
     plt.show(block=True)
 
