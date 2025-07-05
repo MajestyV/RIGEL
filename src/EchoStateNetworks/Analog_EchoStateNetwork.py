@@ -74,6 +74,8 @@ class Analog_ESN:
                 R_state[:, self.transient:], W_out)
 
     def Predicting_phase(self, Q):
+        ''' 自循环预测模块 '''
+
         outputs = np.zeros((self.N,Q))
         U_state = np.zeros((self.K,Q))  # 存放测试阶段所有未激活的储层输入的矩阵
         R_state = np.zeros((self.K,Q))  # 存放测试阶段所有储层态的矩阵
@@ -89,6 +91,22 @@ class Analog_ESN:
             outputs[:,i] = np.dot(self.W_out,R_state[:,i])
 
         return outputs, U_state, R_state
+    
+    def Projecting_phase(self, x_test: np.ndarray) -> np.ndarray:
+        ''' 投影分类及追踪模块 '''
+        Q = x_test.shape[1]
+
+        R_state = np.zeros((self.K, Q))
+
+        R_state[:, 0] = self.func((np.dot(self.rho * self.W_res, self.laststate)
+                                   + self.s_in * np.dot(self.W_in, self.lastinput) + self.b))
+        for i in range(1, Q):
+            R_state[:,i] = self.func(np.dot(self.rho * self.W_res, R_state[:,i-1])
+                                    + self.s_in * np.dot(self.W_in, x_test[:,i]) + self.b)
+
+        outputs = np.dot(self.W_out, R_state)
+
+        return outputs
 
     # 输出各级连接权重矩阵
     def ExportingWeight(self):  return self.W_in, self.W_res, self.W_out
