@@ -61,11 +61,33 @@ pip install -r requirements.txt
 
 For potential developer, feel free to clone this repository to your local computer and make improvements. If you are interested in this project, you can directly contact our group [Electronic Materials and Device @ CUHK](https://www.ee.cuhk.edu.hk/~ghhu/). We have a more powerful version on our organization github repository. The following is some use instructions for using [Git](https://git-scm.com/) to perform project development management.
 
-Before starting, **always create your own branch from `main`**.
+Before starting, **always create your own branch from `main`**. By the way, here is a brief tutorial on basic git commands: [GitTest](https://github.com/MajestyV/GitTest).
 
 ### i. For project maintainers
 
+```Shell
+git clone <remote-repo-url>              # Clone the repository to your local machine
+
+cd  RIGEL                                # Change directory to the cloned repository
+
+git remote add origin <remote-repo-url>  # Add the remote repository URL
+
+git branch -M main                       # Rename the current branch to main
+
+git push -uf origin main                 # Push the main branch to the remote repository
+```
+
 ### ii. For developers
+
+```Shell
+git clone --branch <your-branch-name> <remote-repo-url>  # Clone the repository with your branch
+
+git pull origin <your-branch-name>                       # Pull the latest changes from your branch
+
+git add .                                                # Add all changes to the staging area
+git commit -m "Whatever_you_did"                         # Commit your changes with a message
+git push -u origin <your-branch-name>                    # Push your changes to your branch
+```
 
 ## IV. Citation
 
