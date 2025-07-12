@@ -35,13 +35,13 @@ Using anaconda, we can easily manage our python environment and packages through
 
 (1) Creating new anaconda environment
 ```Shell
-conda create --name yourENV python=3.12
+$ conda create --name yourENV python=3.12
 ```
 where `yourEnv` is the name of your environment.
 
 (2) Activating the environment
 ```Shell
-conda activate yourENV
+$ conda activate yourENV
 ```
 
 (3) Installing packages
@@ -49,11 +49,11 @@ conda activate yourENV
 Part of the required packages can be quickly installed by calling the `requirements.txt` file, which is located in the 
 root directory of this repository. The installation can be done via `conda` by the following command:
 ```Shell
-conda install --yes --file requirements.txt
+$ conda install --yes --file requirements.txt
 ```
 or `pip` by the following command:
 ```Shell
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 (***Reminding***: *When setting up virtual environments by anaconda, using `conda install` before `pip install` is usually beneficial for environment management.*)
 
@@ -66,27 +66,27 @@ Before starting, **always create your own branch from `main`**. By the way, here
 ### i. For project maintainers
 
 ```Shell
-git clone <remote-repo-url>              # Clone the repository to your local machine
+$ git clone <remote-repo-url>              # Clone the repository to your local machine
 
-cd  RIGEL                                # Change directory to the cloned repository
+$ cd RIGEL                                # Change directory to the cloned repository
 
-git remote add origin <remote-repo-url>  # Add the remote repository URL
+$ git remote add origin <remote-repo-url>  # Add the remote repository URL
 
-git branch -M main                       # Rename the current branch to main
+$ git branch -M main                       # Rename the current branch to main
 
-git push -uf origin main                 # Push the main branch to the remote repository
+$ git push -uf origin main                 # Push the main branch to the remote repository
 ```
 
 ### ii. For developers
 
 ```Shell
-git clone --branch <your-branch-name> <remote-repo-url>  # Clone the repository with your branch
+$ git clone --branch <your-branch-name> <remote-repo-url>  # Clone the repository with your branch
 
-git pull origin <your-branch-name>                       # Pull the latest changes from your branch
+$ git pull origin <your-branch-name>                       # Pull the latest changes from your branch
 
-git add .                                                # Add all changes to the staging area
-git commit -m "Whatever_you_did"                         # Commit your changes with a message
-git push -u origin <your-branch-name>                    # Push your changes to your branch
+$ git add .                                                # Add all changes to the staging area
+$ git commit -m "Whatever_you_did"                         # Commit your changes with a message
+$ git push -u origin <your-branch-name>                    # Push your changes to your branch
 ```
 
 ## IV. Citation
