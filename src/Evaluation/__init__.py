@@ -6,7 +6,7 @@
 
 # 回归任务专用的衡量指标
 from .Regression import Standard_deviation, STD
-from .Regression import Deviation, MSE, RMSE, NRMSE
+from .Regression import Deviation_absolute, Deviation_relative, MSE, RMSE, NRMSE
 # 一些特殊的衡量指标
 from .Regression import NRMSE_ICCAD
 

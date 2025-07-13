@@ -3,6 +3,7 @@
 
 import numpy as np
 from sklearn.metrics import mean_squared_error
+from typing import Iterable  # 用于类型注解
 
 # 此函数可以计算序列的标准差，以衡量数据的离散程度，输入应为一个二维数组
 def Standard_deviation(data):
@@ -15,11 +16,24 @@ def Standard_deviation(data):
 # 标准差
 def STD(data): return np.std(data)
 
-# 这个函数可以计算网络的输出结果与真实值之间的实时误差，定义为：deviation(n) = ||y_network(n)-y_truth(n)||_2 (两者向量差的二范数）
-def Deviation(ground_truth,network_output):
+def Deviation_absolute(ground_truth: Iterable, network_output: Iterable) -> float:
+    ''' 
+    此函数可计算网络输出与真实值之间的绝对误差 
+    绝对误差定义为: deviation(n) = ||y_network(n)-y_truth(n)||_2 (两者向量差的二范数)
+    '''
     network_output = np.array(network_output)  # 转换数据类型，确保输入变量为数组
     ground_truth = np.array(ground_truth)
-    deviation = np.linalg.norm(network_output-ground_truth, ord=2)
+    deviation = np.linalg.norm(network_output - ground_truth, ord=2)  # 二范数
+    return deviation
+
+def Deviation_relative(ground_truth: Iterable, network_output: Iterable) -> float:
+    ''' 
+    此函数可计算网络输出与真实值之间的相对误差
+    相对误差定义为: deviation(n) = ||y_network(n)-y_truth(n)||_2 / ||y_truth(n)||_2 (两者向量差的二范数除以真实值的二范数)
+    '''
+    network_output = np.array(network_output)  # 转换数据类型，确保输入变量为数组
+    ground_truth = np.array(ground_truth)
+    deviation = np.linalg.norm(network_output - ground_truth, ord=2) / np.linalg.norm(ground_truth, ord=2)  # 二范数
     return deviation
 
 # 这个函数可以利用scikit-learn包计算均方误差（Mean Squared Error）

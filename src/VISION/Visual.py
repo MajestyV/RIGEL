@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 # 直接调用ASHEN包内含的模块，提高效率
-from ..Evaluation.Regression import Deviation  # 误差分析函数
+from ..Evaluation.Regression import Deviation_relative  # 误差分析函数
 from .Initialize import GlobalSetting  # 画图初始化函数
 from .colors import iColormap, xkcd_rgb, crayons  # 色彩模块
 
@@ -22,7 +22,7 @@ def Analyze_1D_systems(time, training_set, testing_set, wspace=1, hspace=0.8, **
     network_output = np.hstack((output_train_network, output_predict_network))
     x_truth, x_network = (ground_truth[0,:], network_output[0,:])
 
-    deviation = np.array([Deviation(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
+    deviation = np.array([Deviation_relative(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
 
     # 画1D动态系统相位图所需数据
     tau = kwargs['tau'] if 'tau' in kwargs else 1  # 相图的延迟参数
@@ -125,7 +125,8 @@ def Analyze_3D_systems(time, training_set, testing_set, wspace=1, hspace=0.8, mo
     x_truth, y_truth, z_truth = ground_truth
     x_network, y_network, z_network = network_output
 
-    deviation = np.array([Deviation(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
+    deviation = np.array([Deviation_relative(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
+
 
     # 画3D相位图所需数据
     # ground truth in training stage (t_t)
@@ -231,7 +232,7 @@ def Analyze_3D_systems_synchronization(time, training_set, testing_set, wspace=1
     x_truth, y_truth, z_truth = ground_truth
     x_network, y_network, z_network = network_output
 
-    deviation = np.array([Deviation(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
+    deviation = np.array([Deviation_relative(network_output[:,i], ground_truth[:,i]) for i in range(data_length)])  # 计算每一时刻的绝对误差
 
     # 画3D相位图所需数据
 
