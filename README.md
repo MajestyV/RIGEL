@@ -3,6 +3,8 @@
 *<center> 混沌未分天地亂 茫茫渺渺無人見 </center>*
 *<center> 自從盤古破鴻蒙 開闢從茲清濁辨 </center>*
 
+## Table of Contents
+
 - [I. Introduction](#i-introduction)
 - [II. Environment Set-up](#ii-environment-set-up)
   * [i. Pre-requisites](#i-pre-requisites)
@@ -12,8 +14,6 @@
   * [ii. For developers](#ii-for-developers)
 - [IV. Citation](#iv-citation)
 - [References](#references)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 ## I. Introduction
 
