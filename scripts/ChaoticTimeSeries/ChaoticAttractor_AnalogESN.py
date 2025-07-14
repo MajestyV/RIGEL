@@ -82,7 +82,7 @@ if __name__=='__main__':
 
     # 网络拟合结果分析
     VISION.Analyze_3D_systems(np.hstack((t_train_new, t_test)), (y_train, y_train_ESN), (y_test, y_test_ESN),
-                                 deviation_range=(0, 1))
+                              deviation_range=(0, 1))
 
     # 保存数据
     # for fmt in ['eps', 'png', 'pdf']:
