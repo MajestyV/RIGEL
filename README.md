@@ -3,6 +3,18 @@
 *<center> 混沌未分天地亂 茫茫渺渺無人見 </center>*
 *<center> 自從盤古破鴻蒙 開闢從茲清濁辨 </center>*
 
+- [I. Introduction](#i-introduction)
+- [II. Environment Set-up](#ii-environment-set-up)
+  * [i. Pre-requisites](#i-pre-requisites)
+  * [ii. Managing python environment via anaconda](#ii-managing-python-environment-via-anaconda)
+- [III. Development](#iii-development)
+  * [i. For project maintainers](#i-for-project-maintainers)
+  * [ii. For developers](#ii-for-developers)
+- [IV. Citation](#iv-citation)
+- [References](#references)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## I. Introduction
 
 RIGEL is a python package designed for simulating and analyzing reservoir computing hardware systems, particularly focusing on chaotic systems. It provides tools for data acquisition, scientific calculus, dynamical system analysis, machine learning, deep learning, and visualization. 
@@ -10,6 +22,8 @@ RIGEL is a python package designed for simulating and analyzing reservoir comput
 The reservoir computing paradigm adopted in RIGEL is mainly based on Echo State Networks (ESNs) [^1][^2], a foundational model in reservoir computing. Reservoir computing itself can be regarded as a concise and randomized version of recurrent neural networks (RNNs), perserving the form of discrete-time dynamical systems mathematically. As such, it is particularly well-suited for tasks involving time series prediction, especially in chaotic systems where traditional methods may struggle. 
 
 Beyond the core functionalities, RIGEL also includes modules for exploring the real-world applications of the simulated reservoir computing hardware systems, such as information security and more.
+
+For more details, please refer to the [RIGEL documentation](https://majestyv.github.io/RIGEL/).
 
 ## II. Environment Set-up
 
