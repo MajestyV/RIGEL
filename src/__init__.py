@@ -1,3 +1,17 @@
+# RIGEL - Reservoir computing Integrated with Generalized and Efficient Learning
+
+# NOTE: 以下是RIGEL的初始化导入语句
+import os, toml
+current_path = os.path.abspath(os.path.dirname(__file__))  # 获取文件目录
+project_path = current_path[:current_path.find('RIGEL') + len('RIGEL')]  # 获取项目根路径，内容为当前项目的名字，即RIGEL
+
+configs = toml.load(f'{current_path}/configs.toml')  # 读取配置文件
+
+default_results_dir = f'{project_path}/{configs['default_dir_name']['results']}'  # 默认结果目录
+default_demo_dir = f'{project_path}/{configs['default_dir_name']['demo']}'        # 默认演示目录
+default_gallery_dir = f'{project_path}/{configs['default_dir_name']['gallery']}'  # 默认图库目录
+
+# NOTE: 以下是RIGEL各种模块的导入语句
 from . import utils                                                        # 工具函数包
 
 # 硬件分析模块

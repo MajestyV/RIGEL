@@ -27,7 +27,7 @@ For more details, please refer to the [RIGEL documentation](https://majestyv.git
 
 ## II. Environment Set-up
 
-### i. Pre-requisites
+### a. Pre-requisites
 
 Recommended python version: 3.12 (which is used by myself). Anyway, in theory it should work with any python version >= 3.0.
 
@@ -43,7 +43,7 @@ Required packages:
 - *Visualizing progress bar*: [Tqdm](https://pypi.org/project/tqdm/)
 - *Data encryption*: [PyCryptodome](https://pypi.org/project/pycryptodome/)
 
-### ii. Managing python environment via anaconda
+### b. Managing python environment via anaconda
 
 Using anaconda, we can easily manage our python environment and packages through the command line interface (CLI).
 
@@ -77,7 +77,7 @@ For potential developer, feel free to clone this repository to your local comput
 
 Before starting, **always create your own branch from `main`**. By the way, here is a brief tutorial on basic git commands: [GitTest](https://github.com/MajestyV/GitTest).
 
-### i. For project maintainers
+### a. For project maintainers
 
 ```Shell
 $ git clone <remote-repo-url>              # Clone the repository to your local machine
@@ -91,7 +91,7 @@ $ git branch -M main                       # Rename the current branch to main
 $ git push -uf origin main                 # Push the main branch to the remote repository
 ```
 
-### ii. For developers
+### b. For developers
 
 ```Shell
 $ git clone --branch <your-branch-name> <remote-repo-url>  # Clone the repository with your branch
